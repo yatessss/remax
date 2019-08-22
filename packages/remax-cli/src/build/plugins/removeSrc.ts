@@ -102,6 +102,7 @@ export default function removeSrc(options: Options): Plugin {
               const req = getRequireSource(node) || getImportSource(node);
               if (req) {
                 const { start, end } = req;
+<<<<<<< Updated upstream
                 const distance = req.value
                   .split('/')
                   .filter((d: string) => d === '..').length;
@@ -111,6 +112,15 @@ export default function removeSrc(options: Options): Plugin {
                 if (isInsideSrc(file, req.value)) {
                   return;
                 }
+=======
+                console.log('file', file);
+                console.log('req', req.value);
+                const distance = req.value.split('/').filter((d: string) => d === '..').length;
+                const targetDistance = path.relative(path.dirname(file), 'src').split('/').length;
+                console.log('distance', distance);
+                console.log('targetDistance', targetDistance);
+                console.log(path.relative(path.dirname(file), 'src'));
+>>>>>>> Stashed changes
                 if (distance == 1 && targetDistance === 1) {
                   // app.js
                   const newPath = req.value.replace(PARENT_DIR_PATTERN, './');
