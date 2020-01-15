@@ -35,6 +35,7 @@
     "lodash.kebabcase": "^4.1.1",
     "react-reconciler": "0.24.0",
     "remax-alipay": "^1.11.1",
+    "remax-one": "^0.0.1",
     "remax-toutiao": "^1.11.1",
     "remax-wechat": "^1.11.1",
     "remax.macro": "^1.11.1",

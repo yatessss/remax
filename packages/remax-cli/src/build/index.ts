@@ -12,7 +12,10 @@ export default async (argv: any, context?: Context) => {
     ...(context ? context.config : {}),
   };
 
+  process.env.REMAX_PLATFORM = argv.target;
+
   API.registerAdapterPlugins(argv.target);
+  API.registerAdapterPlugins('one');
 
   const rollupOptions: rollup.RollupOptions = rollupConfig(
     options,

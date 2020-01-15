@@ -8,10 +8,7 @@ export const hostComponents: {
   };
 } = (process.env.REMAX_HOST_COMPONENTS as any) || {};
 
-export default function createHostComponent<P = any>(
-  name: string,
-  component?: React.ComponentType<P>
-) {
+export default function createHostComponent<P = any>(name: string, component?: React.ComponentType<P>) {
   if (component) {
     return component;
   }

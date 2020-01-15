@@ -63,7 +63,7 @@ export default function rollupConfig(
 
   const envReplacement: Env = {
     NODE_ENV: process.env.NODE_ENV || 'development',
-    REMAX_PLATFORM: argv.target,
+    REMAX_PLATFORM: process.env.REMAX_PLATFORM,
     REMAX_DEBUG: process.env.REMAX_DEBUG,
     REMAX_PX2RPX: `${options.pxToRpx}`,
     REMAX_HOST_COMPONENTS: () => stringifyHostComponents(),
