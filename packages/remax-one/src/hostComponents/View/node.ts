@@ -2,14 +2,12 @@
 
 const platformAlias: any = {
   alipay: {
-    onClick: 'onTap',
     onTap: 'onTap',
     onTouchStart: 'onTouchStart',
     onTouchMove: 'onTouchMove',
     onTouchEnd: 'onTouchEnd',
     onTouchCancel: 'onTouchCancel',
     onLongTap: 'onLongTap',
-    onLongClick: 'onLongTap',
     onTransitionEnd: 'onTransitionEnd',
     onAnimationIteration: 'onAnimationIteration',
     onAnimationStart: 'onAnimationStart',
@@ -21,13 +19,11 @@ const platformAlias: any = {
   weixin: {
     role: 'aria-role',
     onTap: 'bindtap',
-    onClick: 'bindtap',
     onTouchStart: 'bindtouchstart',
     onTouchMove: 'bindtouchmove',
     onTouchEnd: 'bindtouchend',
     onTouchCancel: 'bindtouchcancel',
     onLongTap: 'bindlongtap',
-    onLongClick: 'bindlongtap',
     onTransitionEnd: 'bindtransitionend',
     onAnimationIteration: 'bindanimationiteration',
     onAnimationStart: 'bindanimationstart',

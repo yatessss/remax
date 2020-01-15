@@ -13,7 +13,6 @@ export interface ImageProps extends React.AriaAttributes {
   onLoad?: (e: any) => void;
   onError?: (e: any) => void;
   onTap?: (e: any) => void;
-  onClick?: (e: any) => void;
 
   // 支付宝
   alipay_defaultSource?: string;

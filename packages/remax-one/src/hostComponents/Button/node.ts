@@ -2,7 +2,6 @@
 
 const platformAlias: any = {
   alipay: {
-    onClick: 'onTap',
     onTap: 'onTap',
     alipay_openType: 'open-type',
     alipay_scope: 'scope',
@@ -10,7 +9,6 @@ const platformAlias: any = {
     alipay_publicId: 'public-id',
   },
   weixin: {
-    onClick: 'bindtap',
     onTap: 'bindtap',
     weixin_openType: 'open-type',
     weixin_appParameter: 'app-parameter',

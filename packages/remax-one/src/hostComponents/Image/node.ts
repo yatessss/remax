@@ -5,14 +5,12 @@ const platformAlias: any = {
     onLoad: 'onLoad',
     onError: 'onError',
     onTap: 'onTap',
-    onClick: 'onTap',
     alipay_defaultSource: 'default-source',
   },
   weixin: {
     onLoad: 'bindload',
     onError: 'binaderror',
     onTap: 'bindtap',
-    onClick: 'bindtap',
     weixin_webp: 'webp',
   },
 };

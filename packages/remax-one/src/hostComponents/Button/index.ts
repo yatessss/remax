@@ -18,7 +18,6 @@ export interface ButtonProps extends React.AriaAttributes {
   hoverStopPropagation?: boolean;
   formType?: 'submit' | 'reset';
   onTap?: (e: any) => void;
-  onClick?: (e: any) => void;
 
   // 支付宝
   alipay_appParameter?: string;
