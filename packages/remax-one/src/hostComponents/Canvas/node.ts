@@ -21,6 +21,7 @@ const platformAlias: any = {
     weixin_binderror: 'binderror',
   },
 };
+
 const defaultAlias = {
   id: 'id',
   style: 'style',
