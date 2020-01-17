@@ -8,7 +8,7 @@ export interface EventTarget {
   offsetTop?: number; // 微信
 }
 
-export interface InputChangeEvent {
+export interface InputEvent {
   currentTarget: EventTarget;
   timeStamp: number;
   target: EventTarget;
@@ -41,10 +41,10 @@ export interface InputProps {
   selectionStart?: number;
   selectionEnd?: number;
   randomNumber?: boolean;
-  onInput?: (e: any) => void;
-  onConfirm?: (e: any) => void;
-  onFocus?: (e: any) => void;
-  onBlur?: (e: any) => void;
+  onInput?: (e: InputEvent) => void;
+  onConfirm?: (e: InputEvent) => void;
+  onFocus?: (e: InputEvent) => void;
+  onBlur?: (e: InputEvent) => void;
 
   // 微信
   weixin_adjustPosition?: boolean;
@@ -67,25 +67,41 @@ export default class Input extends React.Component<InputProps, InputState> {
   constructor(props: InputProps) {
     super(props);
 
-    const hasValue = props.value === undefined;
-    const value = hasValue ? props.value : props.defaultValue;
+    const controlled = props.value !== undefined;
+    const value = controlled ? props.value : props.defaultValue;
 
     this.state = {
       value,
-      controlled: hasValue,
+      controlled,
     };
   }
 
-  handleInput = (e: InputChangeEvent) => {
-    if (this.props.value === undefined) {
+  componentDidUpdate() {
+    if (this.props.value !== undefined && this.props.value !== this.state.value) {
+      this.setState({ value: this.props.value });
+    }
+  }
+
+  handleInput = (e: InputEvent) => {
+    const { controlled } = this.state;
+    if (!controlled) {
       this.setState({ value: e.detail.value });
     }
     if (this.props.onInput) {
-      this.props.onInput(e);
+      return this.props.onInput(e);
     }
+    // 微信
+    return {
+      ...e.detail,
+      value: controlled ? this.props.value : e.detail.value,
+    };
   };
 
   render() {
-    return React.createElement('input', { ...this.props, ...this.state });
+    return React.createElement('input', {
+      ...this.props,
+      ...this.state,
+      onInput: this.handleInput,
+    });
   }
 }
