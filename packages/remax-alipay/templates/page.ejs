@@ -4,18 +4,35 @@
 </template>
 <% } %>
 
-<template name="TPL_DEFAULT">
-  <text a:if="{{node.type === 'plain-text'}}">{{node.text}}</text>
-</template>
+<% for (let component of components) { %>
+  <% if (component.type === 'native') { %>
+<%- include('./native-components.ejs', {
+      props: component.props,
+      id: component.id,
+      view: viewComponent
+      })
+    %>
+  <% } else { %>
+<%- include('./host-components/' + component.id + '.ejs', {
+      props: component.props,
+      id: component.id,
+      })
+    %>
+  <% } %>
+<% } %>
+
+<%- include('./host-components/plain-text.ejs') %>
+<%- include('./host-components/block.ejs') %>
 
 <template name="TPL">
   <block a:if="{{root.children}}">
     <block a:for="{{root.children}}" key="{{item.id}}">
       <template a:if="{{item.props._eid > 0}}" is="{{'TPL_' + item.props._eid}}" data="{{ node: item }}" />
-      <template a:else is="TPL_DEFAULT" data="{{ node: item }}">
+      <template a:else is="{{ 'TPL_' + item.type }}" data="{{ node: item }}" />
     </block>
   </block>
-  <template a:else is="TPL_DEFAULT" data="{{ node: root }}" />
+  <template a:elif="{{root.props._eid > 0}}" is="{{'TPL_' + root.props._eid}}" data="{{ node: root }}" />
+  <template a:else is="{{ 'TPL_' + root.type }}" data="{{ node: root }}" />
 </template>
 
 <template is="TPL" data="{{ root: root }}" />

@@ -28,11 +28,21 @@ async function createElementTemplates(
     pageFile,
     path.extname(pageFile)
   )}${meta.template.extension}`;
+  const components = sortBy(
+    getComponents().concat(Object.values(getNativeComponents())),
+    'id'
+  );
+
+  const hostComponents = API.getHostComponents();
 
   let code: string = await ejs.renderFile(
     meta.ejs.page,
     {
       templates,
+      components,
+      viewComponent: {
+        props: [...new Set(hostComponents.get('view')!.props)].sort(),
+      },
     },
     {
       rmWhitespace: options.compressTemplate,
