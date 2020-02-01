@@ -305,9 +305,9 @@ export default function template(
   return {
     name: 'template',
     async generateBundle(_, bundle, isWrite) {
-      JSXTemplates().forEach(jsxTemplate => {
-        console.log(jsxTemplate.elementID, '\n', jsxTemplate.content);
-      });
+      // JSXTemplates().forEach(jsxTemplate => {
+      //   console.log(jsxTemplate.elementID, '\n', jsxTemplate.content);
+      // });
       const meta = API.getMeta();
       const templateAssets = [];
       // app.json

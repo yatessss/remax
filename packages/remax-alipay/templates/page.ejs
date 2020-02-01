@@ -6,7 +6,7 @@
 
 <% for (let component of components) { %>
   <% if (component.type === 'native') { %>
-<%- include('./native-components.ejs', {
+<%- include('./native-component.ejs', {
       props: component.props,
       id: component.id,
       view: viewComponent

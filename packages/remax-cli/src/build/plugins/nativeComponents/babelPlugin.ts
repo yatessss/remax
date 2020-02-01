@@ -4,6 +4,7 @@ import { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
 import * as path from 'path';
 import { isNativeComponent, isPluginComponent, getSourcePath } from './util';
+import { NATIVE_COMPONENT_ATTRIBUTE_NAME } from '../JSXElement/constants';
 import { RemaxOptions } from 'remax-types';
 import {
   Importers,
@@ -99,6 +100,14 @@ export default (options: RemaxOptions) => {
           }
 
           const id = getKebabCaseName(sourcePath);
+
+          // 标记为 native 组件
+          node.openingElement.attributes.push(
+            t.jsxAttribute(
+              t.jsxIdentifier(NATIVE_COMPONENT_ATTRIBUTE_NAME),
+              t.stringLiteral('true')
+            )
+          );
 
           const usedProps = node.openingElement.attributes.map(e => {
             const propName = get(e, 'name.name') as string;

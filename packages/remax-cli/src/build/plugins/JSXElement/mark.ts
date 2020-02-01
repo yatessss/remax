@@ -1,6 +1,9 @@
 import * as t from '@babel/types';
 import { NodePath } from '@babel/traverse';
-import { ELEMENT_ID_ATTRIBUTE_NAME } from './constants';
+import {
+  ELEMENT_ID_ATTRIBUTE_NAME,
+  NATIVE_COMPONENT_ATTRIBUTE_NAME,
+} from './constants';
 
 export default function markJSXElement() {
   const elementID = {
@@ -20,7 +23,8 @@ export default function markJSXElement() {
           element.attributes.find(
             attr =>
               t.isJSXAttribute(attr) &&
-              attr.name.name === ELEMENT_ID_ATTRIBUTE_NAME
+              (attr.name.name === ELEMENT_ID_ATTRIBUTE_NAME ||
+                attr.name.name === NATIVE_COMPONENT_ATTRIBUTE_NAME)
           )
         ) {
           return;

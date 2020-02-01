@@ -108,6 +108,7 @@ export default function rollupConfig(
       include: entries.pages,
       extensions: without(extensions, '.json'),
       usePlugins: [
+        nativeComponentsBabelPlugin(options),
         JSXElementPlugin.preprocess,
         JSXElementPlugin.mark,
         JSXElementPlugin.visit,
@@ -117,18 +118,18 @@ export default function rollupConfig(
     babel({
       include: entries.pages,
       extensions: without(extensions, '.json'),
-      usePlugins: [nativeComponentsBabelPlugin(options), page],
+      usePlugins: [page],
       reactPreset: false,
     }),
     babel({
       include: entries.app,
       extensions: without(extensions, '.json'),
-      usePlugins: [nativeComponentsBabelPlugin(options), app],
+      usePlugins: [app],
       reactPreset: false,
     }),
     babel({
       extensions: without(extensions, '.json'),
-      usePlugins: [nativeComponentsBabelPlugin(options), components()],
+      usePlugins: [components()],
       reactPreset: true,
     }),
     postcss({
