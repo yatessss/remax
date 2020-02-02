@@ -24,6 +24,7 @@ export default function markJSXElement() {
             attr =>
               t.isJSXAttribute(attr) &&
               (attr.name.name === ELEMENT_ID_ATTRIBUTE_NAME ||
+                // 原生组件不标记 ELEMENT ID
                 attr.name.name === NATIVE_COMPONENT_ATTRIBUTE_NAME)
           )
         ) {

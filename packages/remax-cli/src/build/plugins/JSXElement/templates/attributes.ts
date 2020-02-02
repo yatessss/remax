@@ -1,5 +1,8 @@
 import * as t from '@babel/types';
-import { ELEMENT_ID_ATTRIBUTE_NAME } from '../constants';
+import {
+  ELEMENT_ID_ATTRIBUTE_NAME,
+  REACT_KEY_ATTRIBUTE_NAME,
+} from '../constants';
 import API from '../../../../API';
 
 export function getElementID(element: t.JSXElement) {
@@ -50,6 +53,7 @@ export function createAttributesTemplate(
   return attributes
     .filter(attr => t.isJSXAttribute(attr))
     .filter((attr: any) => attr.name.name !== ELEMENT_ID_ATTRIBUTE_NAME)
+    .filter((attr: any) => attr.name.name !== REACT_KEY_ATTRIBUTE_NAME)
     .map((attr: any) => {
       const prop = hostComponent?.alias?.[attr.name.name] ?? attr.name.name;
       return `${prop}=${createAttributeValueTemplate(prop, attr.value as any)}`;
