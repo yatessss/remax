@@ -1,8 +1,9 @@
 import * as t from '@babel/types';
 import { kebabCase } from 'lodash';
 import { JSXElementPaths } from '../visit';
-import { hostComponents } from '../preprocess';
+import { isHostComponent, getHostComponentName } from '../preprocess';
 import { createAttributesTemplate, getElementID } from './attributes';
+import { NodePath } from '@babel/traverse';
 
 function isEmptyText(
   node:
@@ -59,6 +60,7 @@ function createJSXTemplate(
     | t.JSXFragment
     | t.JSXExpressionContainer
     | t.JSXSpreadChild,
+  path: NodePath,
   module: string,
   dataPath: Array<string | number>
 ): string {
@@ -68,14 +70,17 @@ function createJSXTemplate(
 
     // 非 host 组件
     if (
-      !hostComponents.get(module)?.has(tag) &&
+      !isHostComponent(element, path) &&
       tag !== 'block' &&
       tag !== 'expression-block'
     ) {
-      return `<template is="TPL" data="{{root: ${stringPath(dataPath)}}}" />`;
+      return `<template is="TPL_DEFAULT" data="{{root: ${stringPath(
+        dataPath
+      )}}}" />`;
     }
 
-    tag = kebabCase(tag);
+    // 获取真正的组件名称
+    tag = kebabCase(getHostComponentName(element, path) || tag);
 
     const isExpressionBlock = tag === 'expression-block';
 
@@ -93,6 +98,7 @@ function createJSXTemplate(
     .map((child, cindex) =>
       createJSXTemplate(
         child,
+        path,
         module,
         isExpressionBlock ? dataPath : [...dataPath, 'children', cindex]
       )
@@ -127,7 +133,7 @@ export default function JSXTemplates() {
 
     return {
       elementID,
-      content: createJSXTemplate(element, module, ['node']),
+      content: createJSXTemplate(element, path, module, ['node']),
     };
   });
 }

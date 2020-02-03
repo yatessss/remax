@@ -105,7 +105,6 @@ export default function rollupConfig(
       modules: stubModules,
     }),
     babel({
-      include: entries.pages,
       extensions: without(extensions, '.json'),
       usePlugins: [
         nativeComponentsBabelPlugin(options),

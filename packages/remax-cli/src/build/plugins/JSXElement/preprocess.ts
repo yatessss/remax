@@ -15,32 +15,85 @@ function shouldBeExpBlock(path: NodePath) {
   return openingElement.name !== 'expression-block';
 }
 
-export const hostComponents = new Map<string, Set<string>>();
+export function getHostComponentName(node: t.JSXElement, path: NodePath) {
+  if (t.isJSXIdentifier(node.openingElement.name)) {
+    const tag = node.openingElement.name.name;
+    const binding = path.scope.getBinding(tag);
+
+    if (!binding) {
+      return tag;
+    }
+
+    const importPath = binding.path;
+    if (importPath && t.isImportSpecifier(importPath.node)) {
+      return importPath.node.imported.name;
+    }
+
+    return tag;
+  }
+
+  if (t.isJSXMemberExpression(node.openingElement.name)) {
+    const property = node.openingElement.name.property;
+
+    return property.name;
+  }
+}
+
+export function isHostComponent(node: t.JSXElement, path: NodePath) {
+  if (t.isJSXIdentifier(node.openingElement.name)) {
+    const tag = node.openingElement.name.name;
+    const binding = path.scope.getBinding(tag);
+
+    if (!binding) {
+      return false;
+    }
+
+    const importPath = binding.path;
+
+    if (
+      importPath &&
+      t.isImportSpecifier(importPath.node) &&
+      t.isImportDeclaration(importPath.parent) &&
+      importPath.parent.source.value.startsWith('remax/')
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  if (t.isJSXMemberExpression(node.openingElement.name)) {
+    const object = node.openingElement.name.object;
+
+    if (!t.isJSXIdentifier(object)) {
+      return false;
+    }
+
+    const binding = path.scope.getBinding(object.name);
+    if (!binding) {
+      return false;
+    }
+
+    const importPath = binding.path;
+
+    if (
+      importPath &&
+      t.isImportNamespaceSpecifier(importPath.node) &&
+      t.isImportDeclaration(importPath.parent) &&
+      importPath.parent.source.value.startsWith('remax/')
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  return false;
+}
 
 export default function preprocess() {
   return {
     visitor: {
-      ImportDeclaration(path: NodePath<t.ImportDeclaration>, state: any) {
-        const node = path.node;
-
-        if (!node.source.value.startsWith('remax/')) {
-          return;
-        }
-
-        const module = state.opts.filename;
-
-        node.specifiers.forEach(specifier => {
-          if (t.isImportSpecifier(specifier)) {
-            const componentName = specifier.imported.name;
-
-            if (!hostComponents.get(module)) {
-              hostComponents.set(module, new Set());
-            }
-
-            hostComponents.get(module)?.add(componentName);
-          }
-        });
-      },
       JSXExpressionContainer: (path: NodePath) => {
         const node = path.node as t.JSXExpressionContainer;
         if (t.isJSXEmptyExpression(node.expression)) {
@@ -73,12 +126,11 @@ export default function preprocess() {
           )
         );
       },
-      JSXElement: (path: NodePath, state: any) => {
+      JSXElement: (path: NodePath) => {
         const node = path.node as t.JSXElement;
-        const module = state.opts.filename;
         const tag = (node.openingElement.name as t.JSXIdentifier).name;
 
-        if (hostComponents.get(module)?.has(tag)) {
+        if (!isHostComponent(node, path)) {
           return;
         }
 

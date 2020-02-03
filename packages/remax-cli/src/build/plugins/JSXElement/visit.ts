@@ -10,7 +10,7 @@ export default function visitJSXElement() {
     visitor: {
       JSXElement: (path: NodePath, state: any) => {
         if (!t.isJSXElement(path.parent)) {
-          const module = state.opts.filename;
+          const module = state.filename;
           JSXElementPaths.push({ path, module });
         }
       },

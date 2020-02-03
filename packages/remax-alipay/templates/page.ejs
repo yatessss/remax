@@ -24,6 +24,13 @@
 <%- include('./host-components/plain-text.ejs') %>
 <%- include('./host-components/block.ejs') %>
 
+<!-- for default render -->
+<template name="TPL_DEFAULT">
+  <template a:if="{{root.props._eid > 0}}" is="{{'TPL_' + root.props._eid}}" data="{{ node: root }}" />
+  <template a:else is="{{ 'TPL_' + root.type }}" data="{{ node: root }}" />
+</template>
+
+<!-- for iteration -->
 <template name="TPL">
   <block a:if="{{root.children}}">
     <block a:for="{{root.children}}" key="{{item.id}}">
