@@ -7,17 +7,24 @@
 <% for (let component of components) { %>
   <% if (component.type === 'native') { %>
 <%- include('./native-component.ejs', {
-      props: component.props,
-      id: component.id,
-      view: viewComponent
-      })
-    %>
+  props: component.props,
+  id: component.id,
+  view: viewComponent
+  })
+%>
+  <% } else if (component.additional) { %>
+<%- include('./additional-host-component.ejs', {
+  props: component.props,
+  id: component.id,
+  view: viewComponent
+  })
+%>
   <% } else { %>
 <%- include('./host-components/' + component.id + '.ejs', {
-      props: component.props,
-      id: component.id,
-      })
-    %>
+  props: component.props,
+  id: component.id,
+  })
+%>
   <% } %>
 <% } %>
 

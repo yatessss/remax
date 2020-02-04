@@ -129,6 +129,7 @@ function registerComponent(
     id: componentName,
     props,
     importer,
+    additional,
   };
 
   addToComponentCollection(component, importers);

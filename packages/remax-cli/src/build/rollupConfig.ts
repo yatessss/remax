@@ -109,7 +109,6 @@ export default function rollupConfig(
       usePlugins: [
         nativeComponentsBabelPlugin(options),
         JSXElementPlugin.preprocess,
-        JSXElementPlugin.mark,
         JSXElementPlugin.visit,
       ],
       reactPreset: false,

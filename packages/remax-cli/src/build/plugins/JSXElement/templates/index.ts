@@ -129,7 +129,7 @@ function createJSXTemplate(
 export default function JSXTemplates() {
   return JSXElementPaths.map(({ path, module }, index) => {
     const element = path.node as t.JSXElement;
-    const elementID = getElementID(element);
+    const elementID = getElementID(element.openingElement);
 
     return {
       elementID,

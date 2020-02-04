@@ -5,8 +5,8 @@ import {
 } from '../constants';
 import API from '../../../../API';
 
-export function getElementID(element: t.JSXElement) {
-  const attribute = element.openingElement.attributes.find(
+export function getElementID(element: t.JSXOpeningElement) {
+  const attribute = element.attributes.find(
     attr =>
       t.isJSXAttribute(attr) && attr.name.name === ELEMENT_ID_ATTRIBUTE_NAME
   ) as t.JSXAttribute;
