@@ -29,6 +29,13 @@ function markEID(element: t.JSXOpeningElement, elementID: any) {
   );
 }
 
+// 是否该记录这个模板
+function shouldBeTemplate(node: any, path: NodePath) {
+  if (!t.isJSXElement(node)) {
+    return true;
+  }
+}
+
 export default function visitJSXElement() {
   JSXElementPaths = [];
 
@@ -43,12 +50,16 @@ export default function visitJSXElement() {
   return {
     visitor: {
       JSXElement: (path: NodePath, state: any) => {
-        if (!t.isJSXElement(path.parent)) {
-          const module = state.filename;
+        const parent = path.parent;
 
-          markEID((path.node as t.JSXElement).openingElement, elementID);
-          JSXElementPaths.push({ path, module });
+        if (!shouldBeTemplate(parent, path)) {
+          return;
         }
+
+        const module = state.filename;
+
+        markEID((path.node as t.JSXElement).openingElement, elementID);
+        JSXElementPaths.push({ path, module });
       },
     },
   };
