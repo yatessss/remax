@@ -91,6 +91,43 @@ export function isHostComponent(node: t.JSXElement, path: NodePath) {
   return false;
 }
 
+function isReactFragment(node: t.JSXElement, path: NodePath) {
+  if (t.isJSXIdentifier(node.openingElement.name)) {
+    const tag = node.openingElement.name.name;
+    const binding = path.scope.getBinding(tag);
+
+    if (!binding) {
+      return false;
+    }
+
+    const importPath = binding.path;
+
+    if (
+      importPath &&
+      t.isImportSpecifier(importPath.node) &&
+      t.isImportDeclaration(importPath.parent) &&
+      importPath.parent.source.value.startsWith('react')
+    ) {
+      return importPath.node.imported.name === 'Fragment';
+    }
+
+    return false;
+  }
+
+  if (t.isJSXMemberExpression(node.openingElement.name)) {
+    const object = node.openingElement.name.object;
+    const property = node.openingElement.name.property;
+
+    if (!t.isJSXIdentifier(object)) {
+      return false;
+    }
+
+    return object.name === 'React' && property.name === 'Fragment';
+  }
+
+  return false;
+}
+
 export default function preprocess() {
   return {
     visitor: {
@@ -129,6 +166,20 @@ export default function preprocess() {
       JSXElement: (path: NodePath) => {
         const node = path.node as t.JSXElement;
         const tag = (node.openingElement.name as t.JSXIdentifier).name;
+
+        // case: React.Fragment
+        if (isReactFragment(node, path)) {
+          path.replaceWith(
+            t.jsxElement(
+              t.jsxOpeningElement(t.jsxIdentifier('block'), []),
+              t.jsxClosingElement(t.jsxIdentifier('block')),
+              node.children,
+              false
+            )
+          );
+
+          return;
+        }
 
         if (!isHostComponent(node, path)) {
           return;
