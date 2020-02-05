@@ -181,7 +181,7 @@ export default function preprocess() {
           return;
         }
 
-        if (!isHostComponent(node, path)) {
+        if (isHostComponent(node, path)) {
           return;
         }
 

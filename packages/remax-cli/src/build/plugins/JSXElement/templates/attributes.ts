@@ -25,14 +25,14 @@ export function createAttributesTemplate(
 
   // case: Spread Attributes
   if (hostComponent && attributes.find(attr => t.isJSXSpreadAttribute(attr))) {
-    return hostComponent.props
+    return [...hostComponent.props, 'data-rid']
       .map(prop => `${prop}="{{${dataPath}.props['${prop}']}}"`)
       .join(' ');
   }
 
   function createAttributeValueTemplate(
     attributeName: string,
-    value: t.StringLiteral | t.JSXExpressionContainer
+    value?: t.StringLiteral | t.JSXExpressionContainer
   ) {
     let template = '';
     if (t.isStringLiteral(value)) {
@@ -47,10 +47,14 @@ export function createAttributesTemplate(
       }
     }
 
+    if (attributeName === 'data-rid') {
+      template = `{{${dataPath}.props['${attributeName}']}}`;
+    }
+
     return `"${template}"`;
   }
 
-  return attributes
+  const template = attributes
     .filter(attr => t.isJSXAttribute(attr))
     .filter((attr: any) => attr.name.name !== ELEMENT_ID_ATTRIBUTE_NAME)
     .filter((attr: any) => attr.name.name !== REACT_KEY_ATTRIBUTE_NAME)
@@ -59,4 +63,13 @@ export function createAttributesTemplate(
       return `${prop}=${createAttributeValueTemplate(prop, attr.value as any)}`;
     })
     .join(' ');
+
+  if (componentType !== 'block') {
+    // 默认都加上 data-rid 属性
+    return template.concat(
+      ' ' + `data-rid=${createAttributeValueTemplate('data-rid')}`
+    );
+  }
+
+  return template;
 }
